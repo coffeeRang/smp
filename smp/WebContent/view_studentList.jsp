@@ -1,3 +1,4 @@
+<%@page import="jdbc.DbConnection"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
@@ -26,8 +27,6 @@
 <title>학생목록</title>
 </head>
 <%
-
-	
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
@@ -58,14 +57,13 @@
 	queryBuffer.append(") TOTAL");
 	
 	String query = queryBuffer.toString();
-
 	
 	ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 	
 	try {
-		Class.forName(JDBC_DRIVER);
 		
-		conn = DriverManager.getConnection(DB_URL, USER_ID, PASSWORD);
+		DbConnection dbCon = new DbConnection();
+		conn = dbCon.getConnection();
 		if (conn != null) {
 			System.out.println("connection success");
 			pstmt = conn.prepareStatement(query);
@@ -85,28 +83,22 @@
 				list.add(map);
 				
 			}
-			for (int i = 0; i < list.size(); i++ ) {
-				System.out.println(list.get(i).get("studentSeq"));
-			}
+
 		}
 		
-		
-	} catch (ClassNotFoundException e) {
-		System.out.println("connection fail");
-		e.printStackTrace();
-		
-		
 	} catch (SQLException e) {
-		System.out.println("connection fail");
 		e.printStackTrace();
+	} finally {
+		rs.close();
+		pstmt.close();
+		conn.close();
 	}
 
 %>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
 	<jsp:include page="menu.jsp"></jsp:include>
-	학생목록(view_studentList.jsp) 입니다.
-	
+
 	<table border = "">
 		<tr>
 			<td>학번</td>

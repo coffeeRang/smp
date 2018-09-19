@@ -110,7 +110,7 @@
 		
 		String query = queryBuffer.toString();
 		
-		ArrayList<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
+		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		
 		try {
 			
@@ -155,22 +155,65 @@
 					map.put("examTypeName", rs.getString("EXAM_TYPE_NAME"));
 					map.put("scoreSeq", rs.getString("SCORE_SEQ"));
 					map.put("score", rs.getString("SCORE"));
-					dataList.add(map);
+					list.add(map);
 				}
+				
+				for (int i = 0; i < list.size(); i++) {
+					System.out.println(i + " : " + list.get(i));
+				}
+				// tkfk
+				
+				ArrayList<Map<String, Object>> newList = new ArrayList<Map<String, Object>>();
+				Set<String> studentSet = new LinkedHashSet<String>();			// 학생 seq
+				Set<String> subjectTermTypeCdSet = new LinkedHashSet<String>();	// 학기
+				Set<String> examTypeCdSet = new LinkedHashSet<String>();		// 시험구분
+				Set<String> subjectCdSet = new LinkedHashSet<String>();			// 과목구분
+				
+				for (int i = 0; i < list.size(); i++) {
+					studentSet.add( (String)list.get(i).get("studentSeq") );
+					subjectTermTypeCdSet.add( (String)list.get(i).get("subjectTermTypeCd") );
+					examTypeCdSet.add( (String)list.get(i).get("examTypeCd") );
+					subjectCdSet.add( (String)list.get(i).get("subjectCd") );
+				}
+				
+				for (int i = 0; i < list.size(); i++) {
+					HashMap<String, Object> tempMap = new HashMap<String, Object>();
+
+					String studentSeq = (String)list.get(i).get("studentSeq");
+					String subjectTermTypeCd = (String)list.get(i).get("subjectTermTypeCd");
+					String examTypeCdValue = (String)list.get(i).get("examTypeCd");
+					String subjectCd = (String)list.get(i).get("subjectCd");
+
+					// tempMap.put("", list.get(i).get(""));
+					for (String studentKey: studentSet) {
+						if (studentKey.equals(studentSeq)) {
+							tempMap.put("studentSeq", studentSeq);
+							tempMap.put("studentName", list.get(i).get("studentName"));
+							tempMap.put("schoolYear", list.get(i).get("schoolYear");
+							tempMap.put("classNo", list.get(i).get("classNo"));
+							tempMap.put("personalNo", list.get(i).get("personalNo"));
+							tempMap.put("studentNo", list.get(i).get("studentNo"));
+						}
+						for (String subjectTermTypeKey: subjectTermTypeCdSet) {
+							if (subjectTermTypeKey.equals(subjectTermTypeCd)) {
+								
+							}
+							
+						}
+						
+					}
+					
+				}
+				
+				
+				
+				
 	
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			rs.close();
-			pstmt.close();
 		}
-		
-				
-		
-		
-		
 	
 	}
 
